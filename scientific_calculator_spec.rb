@@ -80,7 +80,29 @@ RSpec.describe ScientificCalculator do
       end
     end
 
-    # describe 'single bracket sets in multiple operations'
+    describe 'single bracket sets in multiple operations' do 
+      context '' do 
+        it '(9+5)/2' do  
+          expression = '(9+5)/2'
+          expect(calculator.solve(expression: expression)).to eq(7.0)
+        end
+
+        it '(2+5+3)/2' do  
+          expression = '(2+5+3)/2'
+          expect(calculator.solve(expression: expression)).to eq(5.0)
+        end
+
+        it '3-4*(9/3)' do 
+          expression = '3-4*(9/3)'
+          expect(calculator.solve(expression: expression)).to eq(-9.0)
+        end
+
+        it '3+4*(9-3)' do 
+          expression = '3+4*(9-3)'
+          expect(calculator.solve(expression: expression)).to eq(27.0)
+        end
+      end
+    end
   end
 
 #   describe 'perform arithmetic with one or more sets of brackets present'
