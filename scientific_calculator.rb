@@ -27,7 +27,6 @@ class ScientificCalculator
     expression = sanitize_inputs(expression) 
     expression
     
-    
     expression = compute_expression(expression)
 
     expression[0].round(3)
@@ -83,7 +82,7 @@ class ScientificCalculator
   def compute_expression(expression)
     if expression.length == 3
       raise ZeroDivisionError if expression.last.zero?
-      
+
       return [expression[0].send(expression[1], expression[2])] 
     end
 
@@ -93,13 +92,35 @@ class ScientificCalculator
         
         operand1 = expression[op_index-1]
         operand2 = expression[op_index+1]
+
+
+        # determine if operands are signed or not and do this only if
+        # operands are + or -. For other operators signature of operand does not
+        # matter.
+        if ['-', '+'].include?(op)
+          if expression[op_index-2] == '-'
+            operand1 = -operand1
+            sign_index = op_index - 2
+          end
+
+          if expression[op_index+1] == '-'
+            operand2 = -operand2
+          end
+        end
+
         
         result = operand1.send(op, operand2)
 
-
         raise ZeroDivisionError if result.infinite?
 
-        expression[(op_index-1)..(op_index+1)] = result
+        if sign_index
+          expression[(op_index-1)..(op_index+1)] = result
+          expression[sign_index] = '-' if result < 0 
+          expression[sign_index] = '+' if result >= 0
+          sign_index = nil
+        else
+          expression[(op_index-1)..(op_index+1)] = result
+        end
       end
     end
 
